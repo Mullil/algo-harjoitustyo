@@ -15,3 +15,6 @@ implementation.
 
 Next I will start to implement the autograd system by writing the gradient functions of different operations on vectors/matrices and implementing the graph for the intermediate values and the gradients.
 After this I should make the topological sorting algorithm to be able to traverse the graph to compute the gradients.
+
+
+Number of hours working on the project this week: 9

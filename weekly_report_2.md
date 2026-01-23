@@ -19,3 +19,5 @@ into it and try different approaches.
 Next I will write the loss function and its gradient function for the tensors,
 and try to finish an initial implementation of the neural network. After this
 the backpropagation algorithm should be ready to be implemented for training.
+
+This week I used around 6 hours for the project.

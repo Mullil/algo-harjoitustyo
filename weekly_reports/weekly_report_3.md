@@ -7,3 +7,5 @@ This week I learned to implement the cross-entropy loss function and the softmax
 I also had some challenges this week that I think I managed to sort out. My initial implementation of the preactivation function that split the function into sum and matrix multiplication tensor operations was too complicated and after some debugging I made the preactivation into a single tensor operation with one grad function, which then worked. This also made the space complexity smaller.
 
 Next I will start to document the code, write tests for the neural network and backpropagation and add support for different batch sizes in training. I also need to start figuring out ways to make the model train better, because currently the accuracy on the training set has not exceeded 50% with different hyperparameters I have tried. To facilitate better training I will probably also implement regularization techniques such as dropout and weight decay.
+
+Number of hours used this week: 12

@@ -1,0 +1,9 @@
+# Weekly report 3
+
+This week I implemented the feedforward neural network class and the backpropagation algorithm for the network using the autograd system I had planned and started to build on the previous weeks. This week I still had to add implementations of the softmax activation function and cross-entropy loss for the tensor class for it to be ready for backpropagation. I also made a preprocessor for the MNIST data and a training loop with stochastic gradient descent to train the network on the data. The training can now be done from the command-line by specifying the hyperparameters of the network with command-line arguments. Thus the program progressed a lot this week.
+
+This week I learned to implement the cross-entropy loss function and the softmax actication function in a numerically stable way. Almost everything else I did I had already learned either on the earlier weeks of the course or before this course.
+
+I also had some challenges this week that I think I managed to sort out. My initial implementation of the preactivation function that split the function into sum and matrix multiplication tensor operations was too complicated and after some debugging I made the preactivation into a single tensor operation with one grad function, which then worked. This also made the space complexity smaller.
+
+Next I will start to document the code, write tests for the neural network and backpropagation and add support for different batch sizes in training. I also need to start figuring out ways to make the model train better, because currently the accuracy on the training set has not exceeded 50% with different hyperparameters I have tried. To facilitate better training I will probably also implement regularization techniques such as dropout and weight decay.

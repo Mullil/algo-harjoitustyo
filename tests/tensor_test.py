@@ -26,6 +26,19 @@ class TestTensor(unittest.TestCase):
         self.assertEqual(c.children[1], b)
         npt.assert_array_equal(c.data, np.array([[8, 5],
                                                 [6, 4]]))
+    
+    def test_preactivation_works(self):
+        x = Tensor(np.array([[1,2,1,2]]).T)
+        w = Tensor(np.array([[2, 2, 1, 1],
+                             [2, 1, 2, -1],
+                             [-1, 1, -1, 2]]))
+        b = Tensor(np.array([[1,2,3]]).T)
+        result = x.preactivation(w, b)
+        self.assertEqual(type(result), Tensor)
+        npt.assert_array_equal(result.children[0], x)
+        npt.assert_array_equal(result.children[1], w)
+        npt.assert_array_equal(result.children[2], b)
+        npt.assert_array_equal(result.data, np.array([[10, 6, 7]]).T)
         
     def test_relu_works(self):
         a = Tensor(np.array([[1,2], [1,2]]))
@@ -40,22 +53,19 @@ class TestTensor(unittest.TestCase):
         self.assertRaises(AssertionError, lambda: npt.assert_array_equal(relu_b.data, b.data))
 
     def test_grad_fn_works(self):
-        a = Tensor(np.array([[1, 2]]))
+        x = Tensor(np.array([[1, 2]]).T)
 
-        b = Tensor(np.array([[2, -1]]))
+        b = Tensor(np.array([[-2, 1]]).T)
 
-        c = Tensor(np.array([[2, -1],
+        w = Tensor(np.array([[2, -1],
                             [2, 2]]))
-        mul = b @ c # [[2, -4]]
-        preactivation = a + mul # [[3, -2]]
-        activation = preactivation.relu() #[[3, 0]]
+
+        preactivation = x.preactivation(w, b) # [[-2, 7]].T
+        activation = preactivation.relu() #[[0, 7]]
         activation.grad = activation.data
-        self.assertEqual(0, preactivation.grad)
+        npt.assert_array_equal(np.zeros(activation.data.shape), preactivation.grad)
         activation.backward_fn(activation)
-        npt.assert_array_equal(preactivation.grad, np.array([[1, 0]]))
+        npt.assert_array_equal(preactivation.grad, np.array([[0, 1]]).T)
         preactivation.backward_fn(preactivation)
-        npt.assert_array_equal(mul.grad, np.array([[1,0]]))
-        npt.assert_array_equal(np.array([[1,0]]), a.grad)
-        mul.backward_fn(mul)
-        npt.assert_array_equal(b.grad, np.array([[2, 2]]))
-        npt.assert_array_equal(c.grad, np.array([[2, 0], [-1, 0]]))
+        npt.assert_array_equal(b.grad, np.array([[1, 1]]).T)
+        npt.assert_array_equal(w.grad, np.array([[0, 0], [1, 2]]))

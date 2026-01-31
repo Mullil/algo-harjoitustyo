@@ -7,7 +7,7 @@ Thus far only the tensor class has been tested with unit tests. The tensor class
 The tests can done by running
 
 ```{bash}
-poetry run pytest
+PYTHONPATH=src poetry run pytest
 ```
 
 on the root of the project,

@@ -42,7 +42,7 @@ class Tensor:
             children_grad = parent.data.copy()
             children_grad[children_grad < 0] = 0
             children_grad[children_grad > 0] = 1
-            parent.children[0].grad += children_grad
+            parent.children[0].grad += parent.grad * children_grad
 
         result.backward_fn = backward_fn
         return result
@@ -76,7 +76,7 @@ class Tensor:
 
         def backward_fn(parent):
             parent.children[1].grad += parent.grad @ parent.children[0].data.T
-            parent.children[2].grad += np.ones((parent.children[2].data.shape))
+            parent.children[2].grad += parent.grad
 
         result.backward_fn = backward_fn
         return result

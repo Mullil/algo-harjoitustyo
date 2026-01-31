@@ -65,7 +65,7 @@ class TestTensor(unittest.TestCase):
         activation.grad = activation.data
         npt.assert_array_equal(np.zeros(activation.data.shape), preactivation.grad)
         activation.backward_fn(activation)
-        npt.assert_array_equal(preactivation.grad, np.array([[0, 1]]).T)
+        npt.assert_array_equal(preactivation.grad, np.array([[0, 7]]).T)
         preactivation.backward_fn(preactivation)
-        npt.assert_array_equal(b.grad, np.array([[1, 1]]).T)
-        npt.assert_array_equal(w.grad, np.array([[0, 0], [1, 2]]))
+        npt.assert_array_equal(b.grad, np.array([[0, 7]]).T)
+        npt.assert_array_equal(w.grad, np.array([[0, 0], [7, 14]]))

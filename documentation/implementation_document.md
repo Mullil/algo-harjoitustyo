@@ -1,0 +1,3 @@
+# Implementation document
+
+The core algorithm has three main components: the Tensor class, the FFNN class and the Layer class. The tensor class is used for all of the computations in the neural netork, and it tracks the gradients and other relevant data for the backpropagation algorithm to work. The FFNN class implements a feedforward neural network that uses the Layer class for the weights and biases. The backpropagation algorithm is called using the FFNN class.

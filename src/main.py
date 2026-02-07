@@ -3,6 +3,12 @@ from model import Model
 
 
 def main(hyperparameters):
+    """
+    Calls the training loop
+
+    Parameters:
+        hyperparameters: a dict object with the hyperparameters of the model and the training loop
+    """
     model = Model(hyperparameters)
     model.train_model()
 

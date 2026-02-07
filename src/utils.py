@@ -2,6 +2,15 @@ from tensor import Tensor
 
 
 def topological_sort(root: Tensor):
+    """
+    Sorts the Directed Acyclic Graph of the tensors such that each node has its children before it
+
+    Parameters:
+        root: The last value computed by the forward pass i.e. the loss
+
+    Returns:
+        a list of the nodes sorted according to the description above
+    """
     visited = set()
     result = []
 

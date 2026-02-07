@@ -5,35 +5,82 @@ import numpy as np
 
 
 class Layer:
+    """
+    Class for a hidden layer in a feedforward neural network
+    """
     def __init__(self, in_d, out_d, is_output=False):
-        self.weights = Tensor(np.random.rand(out_d, in_d))
-        self.biases = Tensor(np.random.rand(out_d, 1))
+        """
+        Initializes the layer's weights and biases according to He initialization
+        
+        Parameters:
+            in_d: input dimension for the layer
+            out_d: output dimension from the layer
+            is_output: inidcates whether the layer is the output layer or not
+        """
+        self.weights = Tensor(np.random.normal(0.0, np.sqrt(2/in_d),(out_d, in_d)))
+        self.biases = Tensor(np.zeros((out_d, 1)))
         self.is_output = is_output
 
     def forward(self, x: Tensor, y: Tensor, y_i: int):
+        """
+        Runs the forward pass on the input. The activation function is ReLU for all layers except
+        the output layer. The output layer uses softmax which is used to compute the cross-entropy loss.
+        
+        Parameters:
+            x: The input tensor
+            y: The one-hot-encoded label tensor
+            y_i: the correct label
+
+        Returns:
+            activation tensor if the layer is not the output layer
+            (loss, prediction) if the layer is the output layer
+        """
         z = x.preactivation(self.weights, self.biases)
         if not self.is_output:
             a = z.relu()
         elif self.is_output:
-            a = z.cross_entropy_with_softmax(y, y_i)
+            loss = z.cross_entropy_with_softmax(y, y_i)
+            return loss, np.argmax(z._softmax(z.data))
         return a
 
 
 class FFNN:
+    """
+    Class for a feedforward neural network used for image classification
+    """
     def __init__(self, layers: List[Layer], lr):
         self.layers = layers
         self.lr = lr
-        self.loss = 0
+        self.loss = None
         self.prediction = None
 
     def forward(self, input: Tensor, y: Tensor, y_i: int):
+        """
+        Calls the forward pass on each layer, where the output of the previous layer becomes the
+        input for the next layer. The prediction for the forward pass is the index of the largest value
+        of the softmax activation. Sets the loss attribute based on the cross-entropy loss.
+
+        Parameters:
+            x: The input tensor
+            y: The one-hot-encoded label tensor
+            y_i: the correct label
+        """
         for layer in self.layers:
             output = layer.forward(input, y, y_i)
             input = output
-        self.loss = input
-        self.prediction = np.argmax(self.loss.children[0].data)
+        if self.loss != None:
+            self.loss += input[0]
+        else:
+            self.loss = input[0]
+        self.prediction = input[1]
 
     def backward(self):
+        """
+        Traverses the sorted Directed Acyclic Graphs from the end to the beginning while calling the
+        backward function on each node, which computes the gradients w.r.t the biases and weights.
+        After computing the gradients, the parameters of each layer are updated by subtracting the
+        gradients multiplied by the learning rate.
+        """
         sorted_nodes: List[Tensor] = topological_sort(self.loss)
         sorted_nodes[-1].grad = sorted_nodes[-1].data
         for i in range(len(sorted_nodes) - 1, -1, -1):
@@ -45,6 +92,10 @@ class FFNN:
                                   self.lr * layer.biases.grad)
 
     def zero_grad(self):
+        """
+        Re-initializes the gradients of the parameters at each layer to zero
+        """
         for layer in self.layers:
             layer.weights.grad = np.zeros(layer.weights.data.shape)
             layer.biases.grad = np.zeros(layer.biases.data.shape)
+        self.loss = None

@@ -8,4 +8,6 @@ I also had some challenges this week that I think I managed to sort out. My init
 
 Next I will start to document the code, write tests for the neural network and backpropagation and add support for different batch sizes in training. I also need to start figuring out ways to make the model train better, because currently the accuracy on the training set has not exceeded 50% with different hyperparameters I have tried. To facilitate better training I will probably also implement regularization techniques such as dropout and weight decay.
 
+(edit: I found a logic bug on the gradient computation after writing this, and after fixing it the model is able to fit the training data much better. The next steps stay the same however)
+
 Number of hours used this week: 12

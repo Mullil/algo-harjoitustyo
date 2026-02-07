@@ -13,9 +13,10 @@ class Model:
         layers: number of hidden layers in the network
         epochs: number of times the training loop will iterate over the whole training set
         hidden: hidden dimension of the layers, i.e. the number of neurons per layer
-        batch_size: number of training instances the forward pass is run on before calling backward pass
-                    on their summed loss
+        batch_size: number of training instances the forward pass is run on before
+        calling backward pass on their summed loss
     """
+
     def __init__(self, hyperparameters: dict):
         self.lr = hyperparameters["lr"]
         self.layers = hyperparameters["layers"]
@@ -26,17 +27,17 @@ class Model:
     def _create_training_set(self, test=False):
         """
         Transforms the MNIST training data into tensors the model can use directly.
-        
-        Parameters:
+
+        Args:
             test: boolean variable to indicate whether the code is called by tests or not
-        
+
         Returns:
             image_tensors: the images as Tensor objects
             label_tensors: one-hot-encoded tensors
             y_i_array: list with the correct labels of each image
         """
         print("Creating training set")
-        mndata =  MNIST('../MNIST_data/') if not test else MNIST('MNIST_data/')
+        mndata = MNIST('../MNIST_data/') if not test else MNIST('MNIST_data/')
         images, labels = mndata.load_training()
         image_tensors = [Tensor(np.array([image]).T / 255) for image in images]
         label_tensors = []
@@ -69,7 +70,8 @@ class Model:
             losses = []
             for i in range(0, len(image_tensors), self.batch_size):
                 for j in range(i, min(i+self.batch_size, len(image_tensors))):
-                    nn.forward(image_tensors[j], label_tensors[j], y_i_array[j])
+                    nn.forward(image_tensors[j],
+                               label_tensors[j], y_i_array[j])
                     correct += nn.prediction == y_i_array[j]
                 losses.append(nn.loss.data / self.batch_size)
                 nn.backward()

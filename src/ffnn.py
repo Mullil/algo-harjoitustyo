@@ -1,32 +1,35 @@
-from tensor import Tensor
 from typing import List
-from utils import topological_sort
 import numpy as np
+from tensor import Tensor
+from utils import topological_sort
 
 
 class Layer:
     """
     Class for a hidden layer in a feedforward neural network
     """
+
     def __init__(self, in_d, out_d, is_output=False):
         """
         Initializes the layer's weights and biases according to He initialization
-        
-        Parameters:
+
+        Args:
             in_d: input dimension for the layer
             out_d: output dimension from the layer
             is_output: inidcates whether the layer is the output layer or not
         """
-        self.weights = Tensor(np.random.normal(0.0, np.sqrt(2/in_d),(out_d, in_d)))
+        self.weights = Tensor(np.random.normal(
+            0.0, np.sqrt(2/in_d), (out_d, in_d)))
         self.biases = Tensor(np.zeros((out_d, 1)))
         self.is_output = is_output
 
     def forward(self, x: Tensor, y: Tensor, y_i: int):
         """
         Runs the forward pass on the input. The activation function is ReLU for all layers except
-        the output layer. The output layer uses softmax which is used to compute the cross-entropy loss.
-        
-        Parameters:
+        the output layer. The output layer uses softmax which is used to compute
+        the cross-entropy loss.
+
+        Args:
             x: The input tensor
             y: The one-hot-encoded label tensor
             y_i: the correct label
@@ -38,41 +41,42 @@ class Layer:
         z = x.preactivation(self.weights, self.biases)
         if not self.is_output:
             a = z.relu()
-        elif self.is_output:
-            loss = z.cross_entropy_with_softmax(y, y_i)
-            return loss, np.argmax(z._softmax(z.data))
-        return a
+            return a
+        loss = z.cross_entropy_with_softmax(y, y_i)
+        return loss, np.argmax(z.softmax(z.data))
 
 
 class FFNN:
     """
     Class for a feedforward neural network used for image classification
     """
+
     def __init__(self, layers: List[Layer], lr):
         self.layers = layers
         self.lr = lr
         self.loss = None
         self.prediction = None
 
-    def forward(self, input: Tensor, y: Tensor, y_i: int):
+    def forward(self, x: Tensor, y: Tensor, y_i: int):
         """
         Calls the forward pass on each layer, where the output of the previous layer becomes the
-        input for the next layer. The prediction for the forward pass is the index of the largest value
-        of the softmax activation. Sets the loss attribute based on the cross-entropy loss.
+        input for the next layer. The prediction for the forward pass is
+        the index of the largest value of the softmax activation.
+        Sets the loss attribute based on the cross-entropy loss.
 
-        Parameters:
+        Args:
             x: The input tensor
             y: The one-hot-encoded label tensor
             y_i: the correct label
         """
         for layer in self.layers:
-            output = layer.forward(input, y, y_i)
-            input = output
-        if self.loss != None:
-            self.loss += input[0]
+            output = layer.forward(x, y, y_i)
+            x = output
+        if self.loss is not None:
+            self.loss += x[0]
         else:
-            self.loss = input[0]
-        self.prediction = input[1]
+            self.loss = x[0]
+        self.prediction = x[1]
 
     def backward(self):
         """

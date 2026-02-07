@@ -11,8 +11,10 @@ class Tensor:
         grad: the gradient array for the tensor
         backward_fn: If the tensor was a result of a tensor operation, calling backward_fn
                      computes the gradients of the operands (i.e. the children) w.r.t the loss using
-                     the gradient of the result and knowledge of the operation the result was computed with.
+                     the gradient of the result and knowledge of the operation the result was
+                     computed with.
     """
+
     def __init__(self, data: np.ndarray):
         self.data = data
         self.children = []
@@ -22,12 +24,13 @@ class Tensor:
     def __add__(self, x: "Tensor"):
         """
         Implements addition for Tensor class
-        
-        Parameters:
+
+        Args:
             x: another tensor self is summed with
 
         Returns:
-            The computed result as a Tensor class with a function to compute the gradient of the operation
+            The computed result as a Tensor class with a function to compute
+            the gradient of the operation
         """
         result = Tensor(self.data + x.data)
         result.children.append(self)
@@ -55,7 +58,7 @@ class Tensor:
     def relu(self):
         """
         Implements ReLU activation function
-        
+
         self: an output of a preactivation 
         """
         result = self.data.copy()
@@ -72,16 +75,17 @@ class Tensor:
         result.backward_fn = backward_fn
         return result
 
-    def _softmax(self, data):
+    def softmax(self, data):
         result = np.exp(data - np.max(data)) / \
             np.sum(np.exp(data - np.max(data)))
         return result
 
     def _log_softmax(self, data: np.ndarray, y_i: int):
         """
-        Implements a numerically stable version of log_softmax that is used to compute cross-entropy loss
+        Implements a numerically stable version of log_softmax
+        that is used to compute cross-entropy loss
 
-        Parameters:
+        Args:
             data: preactivation from a hidden layer
 
         Returns:
@@ -94,20 +98,21 @@ class Tensor:
     def cross_entropy_with_softmax(self, y: "Tensor", y_i: int):
         """
         Combines the softmax activation function with cross-entropy loss.
-        
-        Parameters:
+
+        Args:
             self: an output of a preactivation function
             y: One-hot-encoded tensor representing the correct class
             y_i: The correct class as an integer
 
         Returns:
-            The computed result as a Tensor class with a function to compute the gradient of the operation
+            The computed result as a Tensor class with a function to compute
+            the gradient of the operation
         """
         result = Tensor(-self._log_softmax(self.data, y_i))
         result.children.append(self)
 
         def backward_fn(parent):
-            parent.children[0].grad += self._softmax(
+            parent.children[0].grad += self.softmax(
                 parent.children[0].data) - y.data
 
         result.backward_fn = backward_fn
@@ -115,14 +120,16 @@ class Tensor:
 
     def preactivation(self, w: "Tensor", b: "Tensor"):
         """
-        Computes the preactivation function of a linear layer and defines the gradients of the operands w.r.t the output
-        
-        Parameters:
+        Computes the preactivation function of a linear layer and defines the gradients
+        of the operands w.r.t the output
+
+        Args:
             self: The input for the preactivation
             w: The weight matrix of one layer
             b: The biases of the neurons in one layer
         Returns:
-            The computed result as a Tensor class with a function to compute the gradient of the operation
+            The computed result as a Tensor class with a function
+            to compute the gradient of the operation
         """
         result = Tensor(w.data @ self.data + b.data)
         result.children.append(self)

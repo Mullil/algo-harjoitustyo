@@ -2,14 +2,14 @@ import argparse
 from model import Model
 
 
-def main(hyperparameters):
+def main(hyper_params):
     """
     Calls the training loop
 
-    Parameters:
-        hyperparameters: a dict object with the hyperparameters of the model and the training loop
+    Args:
+        hyper_params: a dict object with the hyperparameters of the model and the training loop
     """
-    model = Model(hyperparameters)
+    model = Model(hyper_params)
     model.train_model()
 
 

@@ -2,15 +2,17 @@ import argparse
 from model import Model
 
 
-def main(hyper_params):
+def main(hyper_params, dir):
     """
-    Calls the training loop
+    Trains the model and tests its accuracy on the MNIST test set
 
     Args:
         hyper_params: a dict object with the hyperparameters of the model and the training loop
+        dir: a string to indicate where to save the model (if dir=None, model is not saved)
     """
     model = Model(hyper_params)
-    model.train_model()
+    model.train_model(dir)
+    model.test_model()
 
 
 if __name__ == "__main__":
@@ -20,6 +22,7 @@ if __name__ == "__main__":
     parser.add_argument("--epochs", type=int)
     parser.add_argument("--lr", type=float)
     parser.add_argument("--batch_size", type=int, default=1)
+    parser.add_argument("--model_dir", type=str, default=None)
     args = parser.parse_args()
     hyperparameters = {
         "layers": args.layers,
@@ -28,4 +31,4 @@ if __name__ == "__main__":
         "lr": args.lr,
         "batch_size": args.batch_size
     }
-    main(hyperparameters)
+    main(hyperparameters, args.model_dir)

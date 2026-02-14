@@ -8,4 +8,4 @@ I don't think anything was particularly unclear or too difficult. Computing the 
 
 Next I will implement the evaluation loop that computes accuracy on the test dataset, and probably make the batching work for the forward pass. I might also still need to figure out more tests for the algorithm. I'm also planning to make a feature that allows to save trained models into files, but that is not as relevant as the previously mentioned features. Having it for the demo could be useful though.
 
-This week I used around 8 hours for the project
+This week I used around 8 hours for the project.

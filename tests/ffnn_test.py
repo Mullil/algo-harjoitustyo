@@ -44,3 +44,20 @@ class TestFFNN(unittest.TestCase):
             if correct == 50:
                 break
         self.assertEqual(correct, 50)
+
+    def test_loss_decreases_after_epochs(self):
+        """
+        Runs for 10 epochs and trains on the 1000 first instances.
+        Test fails if the loss does not decrease after each epoch.
+        """
+        previous_loss = 999
+        for epoch in range(10):
+            total_loss = 0
+            for x, y, y_i in zip(self.image_tensors[:1000], self.label_tensors[:1000], self.y_i_array[:1000]):
+                self.nn.forward(x, y, y_i)
+                total_loss += self.nn.loss.data
+                self.nn.backward()
+                self.nn.zero_grad()
+            avg_loss = total_loss / 1000
+            self.assertLess(avg_loss, previous_loss)
+            previous_loss = total_loss

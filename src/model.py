@@ -1,6 +1,5 @@
 import os
 import json
-from datetime import date
 import numpy as np
 from mnist import MNIST
 from tensor import Tensor

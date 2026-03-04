@@ -91,8 +91,11 @@ class Model:
         if self.layers == 1:
             model_layers = [Layer(784, 10, is_output=True)]
         else:
-            model_layers = [Layer(784, self.hidden)
-                            for _ in range(self.layers - 1)]
+            model_layers = []
+            model_layers.append(Layer(784, self.hidden))
+            for _ in range(self.layers - 2):
+                model_layers.append(Layer(self.hidden, self.hidden))
+
             model_layers.append(Layer(self.hidden, 10, is_output=True))
         self.nn = FFNN(model_layers, lr=self.lr)
 

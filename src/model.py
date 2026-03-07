@@ -25,7 +25,7 @@ class Model:
         
         Args:
             hyperparameters: dictionary of model hyperparameters or None, if load_existing is true
-            load_existing: boolean to indicate whether the class is initialized using a trained model or not
+            load_existing: boolean indicating if the class is initialized using a trained model
         """
         if not load_existing:
             self.lr = hyperparameters["lr"]
@@ -59,7 +59,7 @@ class Model:
             y_i_array.append(label)
         print("\nDone creating training set")
         return image_tensors, label_tensors, y_i_array
-    
+
     def _create_test_set(self):
         """
         Transforms the MNIST test data into tensors the model can use directly.
@@ -70,9 +70,9 @@ class Model:
             y_i_array: list with the correct labels of each image
         """
         print("Creating test set")
-        mndata = MNIST('../MNIST_data/')
-        images, labels = mndata.load_testing()
-        image_tensors = [Tensor(np.array([image]).T / 255) for image in images]
+        self.mndata = MNIST('../MNIST_data/')
+        self.images, labels = self.mndata.load_testing()
+        image_tensors = [Tensor(np.array([image]).T / 255) for image in self.images]
         label_tensors = []
         y_i_array = []
         for label in labels:
@@ -116,15 +116,15 @@ class Model:
                 f"\nEpoch {epoch} avg training loss: {np.mean(np.array(losses))}")
             print(
                 f"Epoch {epoch} training accuracy: {correct / len(image_tensors)}")
-            
+
         if model_dir:
             print(f"\nSaved model to directory {model_dir}")
             self.save_model(model_dir)
 
-            
+
     def test_model(self):
         """
-        The testing loop that calls forward passes on the test data and compputes the test accuracy
+        The testing loop that calls forward passes on the test data and computes the test accuracy
         """
         image_tensors, label_tensors, y_i_array = self._create_test_set()
         correct = 0
@@ -132,11 +132,16 @@ class Model:
             self.nn.forward(image_tensors[i],
                             label_tensors[i], y_i_array[i])
             correct += self.nn.prediction == y_i_array[i]
+            if self.nn.prediction != y_i_array[i]:
+                print(self.mndata.display(self.images[i]))
+                print(self.nn.prediction)
+                print(y_i_array[i])
         print(f"Test accuracy: {correct / len(image_tensors)}")
 
     def save_model(self, dir):
         """
-        Saves the model parameters with relevant metadata into a directory to be able to reuse a trained model
+        Saves the model parameters with relevant metadata into a directory
+        to be able to reuse a trained model
         """
         os.mkdir(dir)
         layer_dict = {}

@@ -17,3 +17,7 @@ I have used ChatGPT's GPT-5 model to check whether my math has been correct befo
 https://michaelkosmider.github.io/dlminiboxtutorial/
 
 https://jaykmody.com/blog/stable-softmax/
+
+Andrej Karpathy's YouTube video: 
+The spelled-out intro to neural networks and backpropagation: building micrograd
+https://youtu.be/VMj-3S1tku0?si=bwtkHHUmcFOyIXE6

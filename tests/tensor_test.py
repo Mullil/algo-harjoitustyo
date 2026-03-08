@@ -15,17 +15,6 @@ class TestTensor(unittest.TestCase):
         self.assertEqual(c.children[1], b)
         npt.assert_array_equal(c.data, np.array([[3, 4],
                                                 [3, 4]]))
-    def test_matmul_of_tensors_works(self):
-        a = Tensor(np.array([[1,3],
-                             [1,2]]))
-        b = Tensor(np.array([[2,2],
-                             [2,1]]))
-        c = a @ b
-        self.assertEqual(type(c), Tensor)
-        self.assertEqual(c.children[0], a)
-        self.assertEqual(c.children[1], b)
-        npt.assert_array_equal(c.data, np.array([[8, 5],
-                                                [6, 4]]))
     
     def test_preactivation_works(self):
         x = Tensor(np.array([[1,2,1,2]]).T)

@@ -15,7 +15,7 @@ PYTHONPATH=src poetry run pytest
 on the root of the project,
 and the coverage report can be seen by running 
 ```{bash}
-coverage run --branch -m pytest
+PYTHONPATH=src coverage run --branch -m pytest
 ```
 
 and 

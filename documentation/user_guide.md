@@ -8,9 +8,9 @@ An example command shown below trains the feedforward neural network with 2 hidd
 poetry run python3 train.py --layers 2 --hidden_dim 32 --epochs 10 --lr 0.01 --batch_size 32 --model_dir testmodel
 ```
 
-Runnin train.py script automatically evaluates the performance of the model on test data, but saved models can also be evaluated later by running the evaluate.py script and giving it the saved model directory as a command line parameter. An example is shown below:
+Running train.py script automatically evaluates the performance of the model on test data, but saved models can also be evaluated later by running the evaluate.py script and giving it the saved model directory as a command line parameter. An example model provided in src/ directory with 2 layers and a hidden dimension of 128 can be evaluated by running:
 
 ```{bash}
-poetry run python3 evaluate.py --model_dir testmodel
+poetry run python3 evaluate.py --model_dir 2_layer
 ```
 

@@ -43,18 +43,6 @@ class Tensor:
         result.backward_fn = backward_fn
         return result
 
-    def __matmul__(self, x: "Tensor"):
-        result = Tensor(self.data @ x.data)
-        result.children.append(self)
-        result.children.append(x)
-
-        def backward_fn(parent):
-            parent.children[0].grad += parent.grad @ parent.children[1].data.T
-            parent.children[1].grad += parent.children[0].data.T @ parent.grad
-
-        result.backward_fn = backward_fn
-        return result
-
     def relu(self):
         """
         Implements ReLU activation function

@@ -132,10 +132,6 @@ class Model:
             self.nn.forward(image_tensors[i],
                             label_tensors[i], y_i_array[i])
             correct += self.nn.prediction == y_i_array[i]
-            if self.nn.prediction != y_i_array[i]:
-                print(self.mndata.display(self.images[i]))
-                print(self.nn.prediction)
-                print(y_i_array[i])
         print(f"Test accuracy: {correct / len(image_tensors)}")
 
     def save_model(self, dir):
